@@ -11,7 +11,7 @@ Za vsako destinacijo bom pridobila:
 * uvrstitev na seznamu najbolj priljubljenih destinacij
 * uvrstitev na seznamu najbolj obiskanih destinacij
 * število obiskovalcev spletne strani, ki so jo obiskali
-* število obiskovalcev spletne strani, ki so jo želijo obiskati
+* število obiskovalcev spletne strani, ki si jo želijo obiskati
 
 Delovne hipoteze:
 * Ali so najbolj priljubljene destinacije tudi med najbolj obiskanimi glede na splošno uvrstitev na seznamih?
