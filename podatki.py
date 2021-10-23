@@ -24,7 +24,7 @@ vzorec_destinacije = re.compile(
 
 vzorec_znotraj = re.compile(
     r'"DDPage__header-dek".*?'
-    r'title-md item-action-count">(?P<obiskali>\d+?)</div>'
+    r'title-md item-action-count">(?P<obiskali>\d+?)</div>.*?'
     r'title-md item-action-count">(?P<zelijo_obiskati>\d+?)</div>',
     flags=re.DOTALL
 )
