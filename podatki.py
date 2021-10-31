@@ -130,8 +130,11 @@ for stran in range(1, koncaj+1):
 priljubljene_lokacije = ureditev_destinacije(priljubljene_destinacije)
 obiskane_lokacije = ureditev_destinacije(obiskane_destinacije)
 vse_lokacije = priljubljene_lokacije
-
 [vse_lokacije.append(lokacija) for lokacija in obiskane_lokacije if lokacija not in priljubljene_lokacije]
+for lokacija in vse_lokacije:
+    if lokacija['mesto'] == '':
+        vse_lokacije.remove(lokacija)
+
 
 #orodja.zapisi_csv(priljubljene_destinacije, ['id', 'destinacija', 'lokacija', 'sirina', 'dolzina', 'opis', 'url', 'priljubljenost'], 'obdelani-podatki/priljubljene_destinacije.csv')
 
