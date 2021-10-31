@@ -37,14 +37,8 @@ vzorec_lokacije = re.compile(
 
 vzorec_podrobneje = re.compile(
     r'"DDPage__header-dek".*?'
-    # r'htlbid\.setTargeting\("tags",\s\[(?P<kljucne_besede>.+?)\]\)'
     r'title-md item-action-count">(?P<obiskali>\d+?)</div>.*?'
-<<<<<<< Updated upstream
-    r'title-md item-action-count">(?P<zelijo_obiskati>\d+?)</div>'
-    r'<a class="itemTags__link js-item-tags-link" href="/categories/(?P<kljucne_besede>.*?)"',
-=======
     r'title-md item-action-count">(?P<zelja>\d+?)</div>',
->>>>>>> Stashed changes
     flags=re.DOTALL
 )
 
