@@ -38,7 +38,7 @@ vzorec_lokacije = re.compile(
 vzorec_podrobneje = re.compile(
     r'"DDPage__header-dek".*?'
     r'title-md item-action-count">(?P<obiskali>\d+?)</div>.*?'
-    r'title-md item-action-count">(?P<zelja>\d+?)</div>',
+    r'title-md item-action-count">(?P<zelijo>\d+?)</div>',
     flags=re.DOTALL
 )
 
@@ -49,8 +49,10 @@ def popravki(slovar):
         slovar[k] = slovar[k].replace("&quot;", '"')
     return slovar
 
+
 def znotraj_destinacije(delna_povezava):
     celotna_povezava = prvi_del_povezave + delna_povezava
+    return celotna_povezava
 
 
 def naslov(stran, seznam):
@@ -60,11 +62,26 @@ def naslov(stran, seznam):
 def znotraj(url_podrobneje):
     return f'https://www.atlasobscura.com{url_podrobneje}'
 
+def zacasno_znotraj(url_znotraj):
+    file = os.path.join(direktorij_destinacij, "zacasno_znotraj.html")
+    orodja.shrani_spletno_stran(url_znotraj, file, True)
+    return posamezni_glasovi()
+
+def posamezni_glasovi():
+    besedilo = orodja.vsebina_datoteke(direktorij_destinacij + "/zacasno_znotraj.html")
+    glasovi = re.search(vzorec_podrobneje, besedilo)
+    glasovi = glasovi.groupdict()
+    glasovi['obiskali'] = int(glasovi['obiskali'])
+    glasovi['zelijo'] = int(glasovi['zelijo'])
+
+    return glasovi['obiskali'], glasovi['zelijo']
 
 def posamezna_destinacija(blok):
     destinacija = re.search(vzorec_destinacije, blok)
     destinacija = destinacija.groupdict()
+
     popravki(destinacija)
+
     destinacija['id'] = int(destinacija['id'])
     destinacija['url'] = znotraj(destinacija['url'])
     
@@ -76,9 +93,13 @@ def posamezna_destinacija(blok):
     destinacija['mesto'] = lokacija['mesto']
     destinacija['drzava'] = lokacija['drzava']
 
+    obiskali, zelijo = zacasno_znotraj(destinacija['url'])
+    destinacija['obiskali'] = obiskali
+    destinacija['zelijo'] = zelijo
+
     return destinacija
 
-def ureditev_destinacije(destinacije):
+def ureditev_lokacije(destinacije):
     lokacije = []
     dodane_lokacije = set()
     for destinacija in destinacije:
@@ -94,16 +115,6 @@ def ureditev_destinacije(destinacije):
 
     return lokacije
 
-
-def obiski_in_priljubljenost(blok):
-    obiskovalci = re.search(vzorec_podrobneje, blok)
-    obiskovalci = obiskovalci.groupdict()
-    popravki(obiskovalci)
-    obiskovalci['obiskali'] = int(obiskovalci['obiskali'])
-    obiskovalci['zelja'] = int(obiskovalci['zelja'])
-    return obiskovalci
-
-
 def posamezna_stran(seznam):
     url = naslov(stran, seznam) 
     name = f'{seznam[1]}_{stran}.html'
@@ -113,13 +124,15 @@ def posamezna_stran(seznam):
     for blok in re.finditer(vzorec_bloka, besedilo):
         yield posamezna_destinacija(blok.group(0))
 
-
 priljubljene_destinacije = []
 for stran in range(1, koncaj+1):
     for ranking, posamezna in enumerate(posamezna_stran(priljubljenost),1):
         posamezna['priljubljenost'] = 18*(stran-1) + ranking
         priljubljene_destinacije.append(posamezna)
 
+priljubljene_destinacije_1 = {k: priljubljene_destinacije[k] for k in ['lokacija', 'destinacija', 'opis', 'sirina', 'dolzina', 'mesto', 'drzava', 'priljubljenost']}
+
+priljubljene_destinacije_2 = {k: priljubljene_destinacije[k] for k in ['id', 'obiskali', 'zelijo']}
 
 obiskane_destinacije = []
 for stran in range(1, koncaj+1):
@@ -127,8 +140,10 @@ for stran in range(1, koncaj+1):
         posamezna['obiskanost'] = 18*(stran-1) + ranking
         obiskane_destinacije.append(posamezna)
 
-priljubljene_lokacije = ureditev_destinacije(priljubljene_destinacije)
-obiskane_lokacije = ureditev_destinacije(obiskane_destinacije)
+obiskane_destinacije_1 = {k: obiskane_destinacije[k] for k in ['lokacija', 'destinacija', 'opis', 'sirina', 'dolzina', 'mesto', 'drzava', 'priljubljenost']}
+
+priljubljene_lokacije = ureditev_lokacije(priljubljene_destinacije_1)
+obiskane_lokacije = ureditev_lokacije(obiskane_destinacije_1)
 vse_lokacije = priljubljene_lokacije
 [vse_lokacije.append(lokacija) for lokacija in obiskane_lokacije if lokacija not in priljubljene_lokacije]
 for lokacija in vse_lokacije:
@@ -136,8 +151,10 @@ for lokacija in vse_lokacije:
         vse_lokacije.remove(lokacija)
 
 
-#orodja.zapisi_csv(priljubljene_destinacije, ['id', 'destinacija', 'lokacija', 'sirina', 'dolzina', 'opis', 'url', 'priljubljenost'], 'obdelani-podatki/priljubljene_destinacije.csv')
+orodja.zapisi_csv(priljubljene_destinacije_1, ['id', 'destinacija', 'lokacija', 'sirina', 'dolzina', 'opis', 'priljubljenost', 'obiskali', 'zelijo'], 'obdelani-podatkipriljubljene_destinacije.csv')
 
-#orodja.zapisi_csv(obiskane_destinacije, ['id', 'destinacija', 'lokacija', 'sirina', 'dolzina', 'opis', 'url', 'obiskanost'], 'obdelani-podatki/obiskane_destinacije.csv')
+orodja.zapisi_csv(obiskane_destinacije_1, ['id', 'destinacija', 'lokacija', 'sirina', 'dolzina', 'opis', 'obiskanost', 'obiskali', 'zelijo'], 'obdelani-podatki/obiskane_destinacije.csv')
 
-#orodja.zapisi_csv(vse_lokacije, ['lokacija', 'mesto', 'drzava'], 'obdelani-podatki/lokacije.csv')
+orodja.zapisi_csv(vse_lokacije, ['lokacija', 'mesto', 'drzava'], 'obdelani-podatki/lokacije.csv')
+
+orodja.zapisi_csv(priljubljene_destinacije_2, ['id', 'obiskali', 'zelijo'], 'obdelani-podatki/glasovi.csv')
