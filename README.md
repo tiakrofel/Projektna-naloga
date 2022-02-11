@@ -37,7 +37,7 @@ Delovne hipoteze:
 Po analizi obdelanih podatkov smo prišli do ugotovitev, da:
 * destinacije, ki se na lestvici priljubljenosti uvrščajo najvišje, ne dosegajo primerljivo visokih mest na lestvici obiskanosti;
 * je v veliki večini število obiskovalcev spletne strani, ki si posamezno destinacijo še želijo obiskati, večje od tistih, ki so tam že bili in da je odklon med tema številoma še posebej velik pri destinacijah, ki na lestvici priljubljenosti zasedajo najvišja mesta;
-* se največ priljubljenih nenavadnih destinacij, ki so dosegle najvišje uvrstitve na analiziranem seznamu, nahaja v mestih Združenih držav amerike, in da večina vseh leži bodisi v ZDA bodisi v Evropi, drugje po svetu pa jih je občutno manj;
+* se največ priljubljenih nenavadnih destinacij, ki so dosegle najvišje uvrstitve na analiziranem seznamu, nahaja v mestih Združenih držav Amerike, in da večina vseh leži bodisi v ZDA bodisi v Evropi, drugje po svetu pa jih je občutno manj;
 * so glede na imena in opise naših nenavadnih destinacij daleč najbolj priljubljeni muzeji, sledijo pa jim parki, hiše in domovi, ki jih lahko najpogosteje opišemo s pridevniki kot so zapuščen, največji, skrit in zgodovinski, če jih omenimo le nekaj.  
 
 
